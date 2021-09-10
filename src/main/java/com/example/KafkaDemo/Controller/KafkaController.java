@@ -20,5 +20,6 @@ public class KafkaController {
     public ResponseEntity<String> publishMessage(@RequestParam("message") String message){
         producerApi.sendMessage(message);
         return ResponseEntity.ok("Successfully send the message to topic");
+
     }
 }
