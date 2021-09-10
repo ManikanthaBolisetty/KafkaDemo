@@ -1,0 +1,13 @@
+version: 3
+
+workflows:
+  version: 2
+  spring_boot_cicd_workflow:
+    jobs:
+      - build
+
+jobs:
+  build:
+    steps:
+      - checkout
+      - run: ./mvnw -Dmaven.test.skip=true package
