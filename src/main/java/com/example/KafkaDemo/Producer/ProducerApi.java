@@ -24,6 +24,7 @@ public class ProducerApi {
         firstProducer.send(producerRecord);
         firstProducer.flush();
         firstProducer.close();
+        
     }
 
 
