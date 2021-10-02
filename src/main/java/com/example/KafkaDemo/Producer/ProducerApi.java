@@ -1,9 +1,9 @@
 package com.example.KafkaDemo.Producer;
 
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Properties;
@@ -19,9 +19,21 @@ public class ProducerApi {
 
         KafkaProducer<String,String> firstProducer = new KafkaProducer<String, String>(properties);
 
-        ProducerRecord<String,String> producerRecord= new ProducerRecord<String,String>("kafkaTesting", "This is my first message");
+        ProducerRecord<String,String> producerRecord= new ProducerRecord<String,String>("kafkaTesting", message);
 
-        firstProducer.send(producerRecord);
+        firstProducer.send(producerRecord, new Callback() {
+            @Override
+            public void onCompletion(RecordMetadata recordMetadata, Exception e) {
+
+                Logger logger= LoggerFactory.getLogger(ProducerApi.class);
+                if(e==null){
+                    logger.info("Successfully received details from "+ "Topic :" + recordMetadata.topic() + "partition:" + recordMetadata.partition()
+                    + "Offset :" + recordMetadata.offset());
+                }else{
+                    logger.error("Can't deliver message to producer, error " + e.getMessage());
+                }
+            }
+        });
         firstProducer.flush();
         firstProducer.close();
         
